@@ -75,11 +75,20 @@ public class SensorMRColor extends LinearOpMode {
       bledOn = touchSensor.isPressed();
       colorSensor.enableLed(bledOn);
 
+      int red = colorSensor.red();
+      int green = colorSensor.green();
+      int blue = colorSensor.blue();
+      String promColor = "None";
       // convert the RGB values to HSV values.
-      Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
+      Color.RGBToHSV(red * 8, green * 8, blue * 8, hsvValues);
+      if ((red > green) && (red > blue))  { promColor = "Red" ; }
+      if ((green > red) && (green > blue))  { promColor = "Green" ; }
+      if ((blue > red) && (blue > green))  { promColor = "Blue" ; }
+
 
       // send the info back to driver station using telemetry function.
       telemetry.addData("LED", bledOn ? "On" : "Off");
+      telemetry.addData("Prominent Color", promColor);
       telemetry.addData("Clear", colorSensor.alpha());
       telemetry.addData("Red  ", colorSensor.red());
       telemetry.addData("Green", colorSensor.green());
