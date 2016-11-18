@@ -54,7 +54,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Drive", group="Linear Opmode")  // @Magic(...) is the other common choice
+@TeleOp(name="Drive", group="Linear Opmode")  // @Magic(...) is the other common choice 
 
 public class Drive extends LinearOpMode {
 
