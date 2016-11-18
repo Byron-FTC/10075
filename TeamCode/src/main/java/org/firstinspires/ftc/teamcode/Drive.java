@@ -54,7 +54,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Drive", group="Linear Opmode")  // @Magic(...) is the other common choice 
+@TeleOp(name="Drive", group="Linear Opmode")  // @Magic(...) is the other common choice
+
 
 public class Drive extends LinearOpMode {
 
@@ -87,7 +88,7 @@ public class Drive extends LinearOpMode {
 
         // eg: Set the drive motor directions:
         // "Reverse" the motor that runs backwards when connected directly to the battery
-        motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+       motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorBackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
