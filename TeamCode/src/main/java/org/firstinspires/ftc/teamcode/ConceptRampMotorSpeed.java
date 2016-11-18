@@ -28,7 +28,7 @@ public class ConceptRampMotorSpeed extends LinearOpMode {
 
     // Define class members
     DcMotor motor;
-    double  power   = 0;   
+    double  power   = 0;
     boolean rampUp  = true;
 
 
