@@ -128,6 +128,10 @@ public class Drive extends LinearOpMode {
             leftPower = (((trigger + 1)/2)*leftPower);
             leftPower = leftPower*Math.abs(leftPower);
 
+
+            telemetry.addData("RightPower",rightPower);
+            telemetry.addData("LeftPower",leftPower);
+
             // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
             motorFrontLeft.setPower(-leftPower);
             motorFrontRight.setPower(-rightPower);
