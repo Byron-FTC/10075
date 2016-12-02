@@ -88,17 +88,17 @@ public class Drive extends LinearOpMode {
 
         // eg: Set the drive motor directions:
         // "Reverse" the motor that runs backwards when connected directly to the battery
-       motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorBackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motorBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         motorArm = hardwareMap.dcMotor.get("motorArm");
 
         motorArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        //motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        //motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -117,29 +117,43 @@ public class Drive extends LinearOpMode {
             telemetry.update();
 
             float trigger;
-            trigger = gamepad1.right_trigger;
+            final int divisor = 2;
+            trigger = gamepad1.right_trigger /divisor;
 
             //Making the speed of he robot be able to be controled by the joysticks and a trigger.
-            rightPower = gamepad1.right_stick_y;
-            rightPower = (((trigger + 1)/2)*rightPower);
-            rightPower = rightPower*Math.abs(rightPower);
+            rightPower = gamepad1.right_stick_y / divisor;
+            /*if (rightPower<0){
+                rightPower = rightPower-trigger;
+            } else if (rightPower > 0){
+                rightPower = rightPower+trigger;
+            }
 
-            leftPower = gamepad1.left_stick_y;
-            leftPower = (((trigger + 1)/2)*leftPower);
-            leftPower = leftPower*Math.abs(leftPower);
+            // the right wheels go slightly faster than the left. Account for that
+            // by slowing them down slightly*/
+            leftPower = gamepad1.left_stick_y / divisor;/*
+            if (leftPower < 0) {
+                leftPower = leftPower-trigger;
+            } else if (leftPower > 0){
+                leftPower = leftPower+trigger;
+            }
+
+            rightPower *= 0.9;*/
 
 
             telemetry.addData("RightPower",rightPower);
             telemetry.addData("LeftPower",leftPower);
 
             // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
-            motorFrontLeft.setPower(-leftPower);
-            motorFrontRight.setPower(-rightPower);
-            motorBackLeft.setPower(-leftPower);
-            motorBackRight.setPower(-rightPower);
+            motorFrontLeft.setPower(leftPower);
+            motorBackLeft.setPower(leftPower);
+            motorBackRight.setPower(rightPower);
+            motorFrontRight.setPower(rightPower);
 
             upS = hardwareMap.touchSensor.get("up");
             downS = hardwareMap.touchSensor.get("down");
+
+            telemetry.addData("back", motorBackLeft.getCurrentPosition());
+            telemetry.addData("front", motorFrontLeft.getCurrentPosition());
 
             if (upS.isPressed()) {
                 if (gamepad2.right_stick_y > 0)
