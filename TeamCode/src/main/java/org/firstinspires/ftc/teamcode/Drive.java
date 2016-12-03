@@ -88,10 +88,14 @@ public class Drive extends LinearOpMode {
 
         // eg: Set the drive motor directions:
         // "Reverse" the motor that runs backwards when connected directly to the battery
-        motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        DcMotor.RunMode rMode = DcMotor.RunMode.RUN_WITHOUT_ENCODER;
+        //DcMotor.RunMode rMode = DcMotor.RunMode.RUN_USING_ENCODER;
+
+        motorFrontLeft.setMode(rMode);
+        motorFrontRight.setMode(rMode);
+        motorBackLeft.setMode(rMode);
+        motorBackRight.setMode(rMode);
 
         motorArm = hardwareMap.dcMotor.get("motorArm");
 
@@ -104,41 +108,16 @@ public class Drive extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        //Taking the game pad input and squaring it to give better control
-        float rightPower;
-        //rightPower = rightPower*rightPower*rightPower;
-
-        float leftPower;
-        //leftPower = leftPower*leftPower*leftPower;
-
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
 
-            float trigger;
-            final int divisor = 2;
-            trigger = gamepad1.right_trigger /divisor;
+            float trigger = gamepad1.right_trigger;
 
             //Making the speed of he robot be able to be controled by the joysticks and a trigger.
-            rightPower = gamepad1.right_stick_y / divisor;
-            /*if (rightPower<0){
-                rightPower = rightPower-trigger;
-            } else if (rightPower > 0){
-                rightPower = rightPower+trigger;
-            }
-
-            // the right wheels go slightly faster than the left. Account for that
-            // by slowing them down slightly*/
-            leftPower = gamepad1.left_stick_y / divisor;/*
-            if (leftPower < 0) {
-                leftPower = leftPower-trigger;
-            } else if (leftPower > 0){
-                leftPower = leftPower+trigger;
-            }
-
-            rightPower *= 0.9;*/
-
+            float rightPower = CalculatePower(trigger,gamepad1.right_stick_y);
+            float leftPower  = CalculatePower(trigger,gamepad1.left_stick_y);
 
             telemetry.addData("RightPower",rightPower);
             telemetry.addData("LeftPower",leftPower);
@@ -179,5 +158,22 @@ public class Drive extends LinearOpMode {
 
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
         }
+    }
+
+    public float CalculatePower(float trigger, float stick){
+        final int stickDevisor = 2;
+        final int trigDevisor = 2;
+
+        // if (trigger > 0) trigBoost = trigger / trigDevisor, else trigBoost = 0
+        float trigBoost = (trigger > 0) ? trigger / trigDevisor : 0;
+
+        // if (stick < 0) then trigBoost = - trigBoost, else trigBoost = trigboost.
+        trigBoost = (stick < 0) ? -trigBoost : trigBoost;
+
+        // if (stick unequal to 0) then power = (stick / stickDevisor) + trigBoost) else
+        //   power = 0
+        float power = (stick != 0) ? ((stick / stickDevisor) + trigBoost) : 0;
+
+        return power;
     }
 }
