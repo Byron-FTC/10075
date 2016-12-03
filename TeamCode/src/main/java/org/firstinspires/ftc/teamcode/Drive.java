@@ -161,7 +161,7 @@ public class Drive extends LinearOpMode {
     }
 
     public float CalculatePower(float trigger, float stick){
-        final int stickDevisor = 2;
+        final int stickDevisor = 4;
         final int trigDevisor = 2;
 
         // if (trigger > 0) trigBoost = trigger / trigDevisor, else trigBoost = 0
