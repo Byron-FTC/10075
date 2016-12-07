@@ -71,6 +71,13 @@ public class Drive extends LinearOpMode {
     TouchSensor upS;
     TouchSensor downS;
 
+    int iUpperArmPosition;
+    int iBallControl;
+    int iAquire;
+    int iBeacon;
+    int iBallControlOffset=200;
+    int iAquireOffset=222;
+    int iBeaconOffset=400;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -85,6 +92,8 @@ public class Drive extends LinearOpMode {
         motorBackRight = this.hardwareMap.dcMotor.get("motorBackRight");
         motorFrontLeft = this.hardwareMap.dcMotor.get("motorFrontLeft");
         motorFrontRight = this.hardwareMap.dcMotor.get("motorFrontRight");
+        motorArm = hardwareMap.dcMotor.get("motorArm");
+
 
         // eg: Set the drive motor directions:
         // "Reverse" the motor that runs backwards when connected directly to the battery
@@ -97,8 +106,6 @@ public class Drive extends LinearOpMode {
         motorBackLeft.setMode(rMode);
         motorBackRight.setMode(rMode);
 
-        motorArm = hardwareMap.dcMotor.get("motorArm");
-
         motorArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -108,6 +115,10 @@ public class Drive extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        // Raise arm to 0 encoder
+        motorArm.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorArm.setPower(.5);
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
@@ -116,11 +127,11 @@ public class Drive extends LinearOpMode {
             float trigger = gamepad1.right_trigger;
 
             //Making the speed of he robot be able to be controled by the joysticks and a trigger.
-            float rightPower = CalculatePower(trigger,gamepad1.right_stick_y);
-            float leftPower  = CalculatePower(trigger,gamepad1.left_stick_y);
+            float rightPower = CalculatePower(trigger, gamepad1.right_stick_y);
+            float leftPower = CalculatePower(trigger, gamepad1.left_stick_y);
 
-            telemetry.addData("RightPower",rightPower);
-            telemetry.addData("LeftPower",leftPower);
+            telemetry.addData("RightPower", rightPower);
+            telemetry.addData("LeftPower", leftPower);
 
             // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
             motorFrontLeft.setPower(leftPower);
@@ -130,29 +141,33 @@ public class Drive extends LinearOpMode {
 
             upS = hardwareMap.touchSensor.get("up");
             downS = hardwareMap.touchSensor.get("down");
+            telemetry.addData("ups is pressed?", upS.isPressed());
+            telemetry.addData("downs is pressed?", downS.isPressed());
 
-            telemetry.addData("back", motorBackLeft.getCurrentPosition());
-            telemetry.addData("front", motorFrontLeft.getCurrentPosition());
+            telemetry.addData("ArmPosition",motorArm.getCurrentPosition());
 
             if (upS.isPressed()) {
+                iUpperArmPosition = motorArm.getCurrentPosition();
+                iBallControl = iUpperArmPosition + iBallControlOffset;
+                if (iBallControl > 1450) { iBallControl = iBallControl - 1450; }
+                iAquire = iUpperArmPosition + iAquireOffset;
+                if (iAquire > 1450) { iAquire = iAquire - 1450; }
+                iBeacon = iUpperArmPosition + iBeaconOffset;
+                if (iBeacon > 1450) { iBeacon = iBeacon - 1450; }
                 if (gamepad2.right_stick_y > 0)
                     motorArm.setPower(0);
-                    else{
-                    motorArm.setPower(gamepad2.right_stick_y);
-                }
-            }
-                else
-
-                if (downS.isPressed()) {
-                    if (gamepad2.right_stick_y < 0)
-                        motorArm.setPower(0);
-                    else{
-                        motorArm.setPower(gamepad2.right_stick_y);
-                    }
-                }
                 else {
                     motorArm.setPower(gamepad2.right_stick_y);
                 }
+            } else if (downS.isPressed()) {
+                if (gamepad2.right_stick_y < 0)
+                    motorArm.setPower(0);
+                else {
+                    motorArm.setPower(gamepad2.right_stick_y);
+                }
+            } else {
+                motorArm.setPower(gamepad2.right_stick_y);
+            }
 
 
 
