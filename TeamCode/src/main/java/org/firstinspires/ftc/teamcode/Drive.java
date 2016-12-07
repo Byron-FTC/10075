@@ -130,7 +130,11 @@ public class Drive extends LinearOpMode {
             float rightPower = CalculatePower(trigger, gamepad1.right_stick_y);
             float leftPower = CalculatePower(trigger, gamepad1.left_stick_y);
 
-            telemetry.addData("RightPower", rightPower);
+            //right motors to fast so we are slowing it down
+            rightPower = rightPower/100;
+            rightPower = rightPower*95;
+
+            telemetry.addData("RightPower : Should Be Slower", rightPower);
             telemetry.addData("LeftPower", leftPower);
 
             // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
@@ -149,18 +153,18 @@ public class Drive extends LinearOpMode {
             if (upS.isPressed()) {
                 iUpperArmPosition = motorArm.getCurrentPosition();
                 iBallControl = iUpperArmPosition + iBallControlOffset;
-                if (iBallControl > 1450) { iBallControl = iBallControl - 1450; }
+                if (iBallControl < 1450) { iBallControl = iBallControl - 1450; }
                 iAquire = iUpperArmPosition + iAquireOffset;
-                if (iAquire > 1450) { iAquire = iAquire - 1450; }
+                if (iAquire < 1450) { iAquire = iAquire - 1450; }
                 iBeacon = iUpperArmPosition + iBeaconOffset;
-                if (iBeacon > 1450) { iBeacon = iBeacon - 1450; }
-                if (gamepad2.right_stick_y > 0)
+                if (iBeacon < 1450) { iBeacon = iBeacon - 1450; }
+                if (gamepad2.right_stick_y < 0)
                     motorArm.setPower(0);
                 else {
                     motorArm.setPower(gamepad2.right_stick_y);
                 }
             } else if (downS.isPressed()) {
-                if (gamepad2.right_stick_y < 0)
+                if (gamepad2.right_stick_y > 0)
                     motorArm.setPower(0);
                 else {
                     motorArm.setPower(gamepad2.right_stick_y);
