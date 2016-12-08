@@ -149,11 +149,15 @@ public class Drive extends LinearOpMode {
             telemetry.addData("downs is pressed?", downS.isPressed());
 
             telemetry.addData("ArmPosition",motorArm.getCurrentPosition());
-			// The following code check to see if the upper or lower limit switches have been pressed and
-			//    handles the events 
+
             if (upS.isPressed()) {
-				// if the upper switch is pressed, we need to reset the arm positions.
-				ResetArmPositions();
+                iUpperArmPosition = motorArm.getCurrentPosition();
+                iBallControl = iUpperArmPosition + iBallControlOffset;
+                if (iBallControl < 1440) { iBallControl = iBallControl - 1440; }
+                iAquire = iUpperArmPosition + iAquireOffset;
+                if (iAquire < 1440) { iAquire = iAquire - 1440; }
+                iBeacon = iUpperArmPosition + iBeaconOffset;
+                if (iBeacon < 1440) { iBeacon = iBeacon - 1440; }
                 if (gamepad2.right_stick_y < 0)
                     motorArm.setPower(0);
                 else {
@@ -170,30 +174,10 @@ public class Drive extends LinearOpMode {
             }
 
 
-
+            
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
         }
     }
-
-	// The following routine gets the current position of the robot arm and stores it as its start point.
-	//     the iBallControl, iAquire, and iBeacon positions are calculated as offsets from the startpoint
-	//     which is iUpperArmPosition.
-	public void ResetArmPositions() {
-		iUpperArmPosition = motorArm.getCurrentPosition();
-		
-		iBallControl = iUpperArmPosition + iBallControlOffset;
-		if (iBallControl < 1450) { 
-			iBallControl = iBallControl - 1450; 
-		}
-		iAquire = iUpperArmPosition + iAquireOffset;
-		if (iAquire < 1450) { 
-			iAquire = iAquire - 1450; 
-		}
-		iBeacon = iUpperArmPosition + iBeaconOffset;
-		if (iBeacon < 1450) { 
-			iBeacon = iBeacon - 1450; 
-		}
-	}
 
     public float CalculatePower(float trigger, float stick){
         final int stickDevisor = 4;
