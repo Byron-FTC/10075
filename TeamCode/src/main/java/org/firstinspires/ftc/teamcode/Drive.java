@@ -178,7 +178,7 @@ public class Drive extends LinearOpMode {
 	// The following routine gets the current position of the robot arm and stores it as its start point.
 	//     the iBallControl, iAquire, and iBeacon positions are calculated as offsets from the startpoint
 	//     which is iUpperArmPosition.
-	public void ResetArmPositions() { 
+	public void ResetArmPositions() {  
 		iUpperArmPosition = motorArm.getCurrentPosition();
 		
 		iBallControl = iUpperArmPosition + iBallControlOffset;
