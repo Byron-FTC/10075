@@ -98,7 +98,7 @@ public class Drive_Auto extends LinearOpMode {
 
         motorFrontLeft.setMode(rMode);
         motorFrontRight.setMode(rMode);
-        motorBackLeft.setMode(rMode);
+        motorBackLeft.setMode(rMode); 
         motorBackRight.setMode(rMode);
 
         motorArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
