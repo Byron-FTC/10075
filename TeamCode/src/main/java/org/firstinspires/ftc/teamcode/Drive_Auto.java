@@ -93,8 +93,8 @@ public class Drive_Auto extends LinearOpMode {
         motorFrontRight = this.hardwareMap.dcMotor.get("motorFrontRight");
         motorArm = hardwareMap.dcMotor.get("motorArm");
 
-        //DcMotor.RunMode rMode = DcMotor.RunMode.RUN_WITHOUT_ENCODER;
-        DcMotor.RunMode rMode = DcMotor.RunMode.RUN_USING_ENCODER;
+        DcMotor.RunMode rMode = DcMotor.RunMode.RUN_WITHOUT_ENCODER;
+        //DcMotor.RunMode rMode = DcMotor.RunMode.RUN_USING_ENCODER;
 
         motorFrontLeft.setMode(rMode);
         motorFrontRight.setMode(rMode);
@@ -108,8 +108,8 @@ public class Drive_Auto extends LinearOpMode {
         runtime.reset();
 
         // Raise arm to 0 encoder
-        motorArm.setDirection(DcMotorSimple.Direction.REVERSE);
-        motorArm.setPower(.5);
+        /*motorArm.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorArm.setPower(.5);*/
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -117,35 +117,36 @@ public class Drive_Auto extends LinearOpMode {
             telemetry.update();
 
             //Making the speed of he robot be able to be controled by the joysticks and a trigger.
-            double rightPower =  0.5;
-            double leftPower =  0.5;
+            double rightPower =  -0.25;
+            double leftPower =  -0.25;
 
             telemetry.addData("RightPower : Should Be Slower", rightPower);
             telemetry.addData("LeftPower", leftPower);
 
             // Step 1:  Drive forward for 2 seconds
-            ExecuteStep(.5,.5,2, "Leg 1, Drive Forward");
+            ExecuteStep(leftPower,rightPower,2, "Leg 1, Drive Forward");
 
             // Step 2:  Turn 1 second
-            ExecuteStep(-.5,.5,1, "Leg 2, Turn");
+            ExecuteStep(-leftPower,rightPower,1, "Leg 2, Turn");
 
             // Step 3:  Drive forward for 2 seconds
-            ExecuteStep(.5,.5,2, "Leg 3, Drive Forward");
+            ExecuteStep(leftPower,rightPower,2, "Leg 3, Drive Forward");
 
             // Step 4:  Turn 2 second
-            ExecuteStep(-.5,.5,1, "Leg 4, Turn");
+            ExecuteStep(-leftPower,rightPower,1, "Leg 4, Turn");
 
             // Step 5:  Drive forward for 2 seconds
-            ExecuteStep(.5,.5,2, "Leg 5, Drive Forward");
+            ExecuteStep(leftPower,rightPower,2, "Leg 5, Drive Forward");
 
             // Step 6:  Turn 2 second
-            ExecuteStep(-.5,.5,1, "Leg 6, Turn");
+            ExecuteStep(-leftPower,rightPower,1, "Leg 6, Turn");
 
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
         }
     }
 
     private void SetMotorPowers(double left, double right){
+        //telemetry.addData("power",  );
         motorBackLeft.setPower(left);
         motorFrontLeft.setPower(left);
         motorBackRight.setPower(right);
@@ -157,7 +158,7 @@ public class Drive_Auto extends LinearOpMode {
         ElapsedTime stepTime = new ElapsedTime();
         SetMotorPowers(left,right);
         stepTime.reset();
-        while (opModeIsActive() && (runtime.seconds() < seconds)) {
+        while (opModeIsActive() && (stepTime.seconds() < seconds)) {
             telemetry.addData(description, "Elapsed Time: %2.5f S Elapsed", stepTime.seconds());
             telemetry.update();
             Thread.yield();  // If other threads of work need a chance to do something, let them.
