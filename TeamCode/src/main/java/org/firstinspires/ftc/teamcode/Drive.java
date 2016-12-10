@@ -116,9 +116,18 @@ public class Drive extends LinearOpMode {
         runtime.reset();
 
         // Raise arm to 0 encoder
-        motorArm.setDirection(DcMotorSimple.Direction.REVERSE);
-        motorArm.setPower(.5);
+        motorArm.setDirection(DcMotorSimple.Direction.FORWARD);
+        upS = hardwareMap.touchSensor.get("up");
+        downS = hardwareMap.touchSensor.get("down");
 
+        /*while (!upS.isPressed()) {
+            motorArm.setPower(.5);
+        }*/
+
+        motorArm.setTargetPosition(365);
+        
+
+        motorArm.setDirection(DcMotorSimple.Direction.REVERSE);
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
@@ -143,7 +152,6 @@ public class Drive extends LinearOpMode {
             motorBackRight.setPower(rightPower);
             motorFrontRight.setPower(rightPower);
 
-            upS = hardwareMap.touchSensor.get("up");
             downS = hardwareMap.touchSensor.get("down");
             telemetry.addData("ups is pressed?", upS.isPressed());
             telemetry.addData("downs is pressed?", downS.isPressed());
@@ -181,16 +189,16 @@ public class Drive extends LinearOpMode {
 		iUpperArmPosition = motorArm.getCurrentPosition();
 		
 		iBallControl = iUpperArmPosition + iBallControlOffset;
-		if (iBallControl < 1450) { 
-			iBallControl = iBallControl - 1450; 
+		if (iBallControl < 1440) {
+			iBallControl = iBallControl - 1440;
 		}
 		iAquire = iUpperArmPosition + iAquireOffset;
-		if (iAquire < 1450) { 
-			iAquire = iAquire - 1450; 
+		if (iAquire < 1440) {
+			iAquire = iAquire - 1440;
 		}
 		iBeacon = iUpperArmPosition + iBeaconOffset;
-		if (iBeacon < 1450) { 
-			iBeacon = iBeacon - 1450; 
+		if (iBeacon < 1440) {
+			iBeacon = iBeacon - 1440;
 		}
 	}
 

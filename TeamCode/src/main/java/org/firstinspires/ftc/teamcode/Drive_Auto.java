@@ -127,19 +127,19 @@ public class Drive_Auto extends LinearOpMode {
             ExecuteStep(.5,.5,2, "Leg 1, Drive Forward");
 
             // Step 2:  Turn 1 second
-            ExecuteStep(.5,.5,2, "Leg 2, Turn");
+            ExecuteStep(-.5,.5,1, "Leg 2, Turn");
 
             // Step 3:  Drive forward for 2 seconds
             ExecuteStep(.5,.5,2, "Leg 3, Drive Forward");
 
-            // Step 4:  Turn 2 second
-            ExecuteStep(.5,.5,2, "Leg 4, Turn");
+            // Step 4:  Turn 1 second
+            ExecuteStep(-.5,.5,1, "Leg 4, Turn");
 
             // Step 5:  Drive forward for 2 seconds
             ExecuteStep(.5,.5,2, "Leg 5, Drive Forward");
 
-            // Step 6:  Turn 2 second
-            ExecuteStep(.5,.5,2, "Leg 6, Turn");
+            // Step 6:  Turn 1 second
+            ExecuteStep(-.5,.5,1, "Leg 6, Turn");
 
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
         }
@@ -157,7 +157,7 @@ public class Drive_Auto extends LinearOpMode {
         ElapsedTime stepTime = new ElapsedTime();
         SetMotorPowers(left,right);
         stepTime.reset();
-        while (opModeIsActive() && (runtime.seconds() < seconds)) {
+        while (opModeIsActive() && (stepTime.seconds() < seconds)) {
             telemetry.addData(description, "Elapsed Time: %2.5f S Elapsed", stepTime.seconds());
             telemetry.update();
             Thread.yield();  // If other threads of work need a chance to do something, let them.
