@@ -32,11 +32,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
+import android.app.KeyguardManager;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -54,9 +54,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Auto Drive By Time", group="Pushbot")
+@Autonomous(name="Auto Park In Corner Right", group="Pushbot")
 
-public class Drive_Auto extends LinearOpMode {
+public class Auto_Park_In_Corner_Right extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -98,7 +98,7 @@ public class Drive_Auto extends LinearOpMode {
 
         motorFrontLeft.setMode(rMode);
         motorFrontRight.setMode(rMode);
-        motorBackLeft.setMode(rMode); 
+        motorBackLeft.setMode(rMode);
         motorBackRight.setMode(rMode);
 
         motorArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -117,31 +117,28 @@ public class Drive_Auto extends LinearOpMode {
             telemetry.update();
 
             //Making the speed of he robot be able to be controled by the joysticks and a trigger.
-            double rightPower =  -0.25;
-            double leftPower =  -0.25;
+            double rightPower =  -.15;
+            double leftPower =  -.15;
+
+            rightPower = rightPower*.95;
 
             telemetry.addData("RightPower : Should Be Slower", rightPower);
             telemetry.addData("LeftPower", leftPower);
 
-            // Step 1:  Drive forward for 2 seconds
+            // Step 1:  Drive forward for .25 seconds
             ExecuteStep(leftPower,rightPower,2, "Leg 1, Drive Forward");
 
-            // Step 2:  Turn 1 second
-            ExecuteStep(-leftPower,rightPower,1, "Leg 2, Turn");
+            // Step 2:  turn leftr
+            ExecuteStep(-leftPower,rightPower,1.2, "Leg 2, Turn Left");
 
-            // Step 3:  Drive forward for 2 seconds
-            ExecuteStep(leftPower,rightPower,2, "Leg 3, Drive Forward");
+            // step 3: drive forward.
+            ExecuteStep(leftPower, rightPower, 3.3, "leg 3, Drive to Ramp");
 
-            // Step 4:  Turn 2 second
-            ExecuteStep(-leftPower,rightPower,1, "Leg 4, Turn");
+            // step 4: stop
+            ExecuteStep(0,0,0,"Stop");
 
-            // Step 5:  Drive forward for 2 seconds
-            ExecuteStep(leftPower,rightPower,2, "Leg 5, Drive Forward");
+            break;
 
-            // Step 6:  Turn 2 second
-            ExecuteStep(-leftPower,rightPower,1, "Leg 6, Turn");
-
-            idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
         }
     }
 
